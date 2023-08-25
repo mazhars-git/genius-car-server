@@ -28,6 +28,8 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
+    //connect to the server and database
+
     const serviceCollection = client.db('genius-car').collection('services');
     const bookingCollection = client.db('genius-car').collection('bookings');
 
@@ -43,14 +45,25 @@ async function run() {
 
         const options = {
             // Include only the `title` and `imdb` fields in the returned document
-            projection: { title: 1, price: 1, service_id: 1 },
+            projection: { title: 1, price: 1, service_id: 1, img: 1 },
           };
 
         const result = await serviceCollection.findOne(query, options);
         res.send(result);
     });
 
-    //bookings
+    //get bookings from database
+
+    app.get('/bookings', async (req, res) => {
+      let query = {};
+      if(req.query?.email){
+        query = {email: req.query.email}
+      }
+      const result = await bookingCollection.find(query).toArray();
+      res.send(result);
+    })
+
+    //post booking in server
 
     app.post('/bookings', async (req, res) => {
         const booking = req.body;
@@ -61,7 +74,6 @@ async function run() {
     });
 
     
-
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
