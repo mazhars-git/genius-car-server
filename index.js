@@ -70,14 +70,25 @@ async function run() {
         const result = await bookingCollection.insertOne(booking);
         res.send(result);
 
-        console.log(booking);
+        // console.log(booking);
     });
 
     //update bookings
 
-    app.put('/bookings/:id', async(req, res) => {
-      const updatedBookings = await req.body;
-      
+    app.patch('/bookings/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const updatedBookings = req.body;
+      console.log(updatedBookings);
+
+      const updateDoc = {
+        $set: {
+          status: updatedBookings.status
+        },
+      }
+      const result = await bookingCollection.updateOne(filter, updateDoc);
+      res.send(result);
+
     })
 
     //delete items
@@ -100,7 +111,6 @@ async function run() {
   }
 }
 run().catch(console.dir);
-
 
 
 
