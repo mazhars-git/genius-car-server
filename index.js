@@ -73,6 +73,13 @@ async function run() {
         console.log(booking);
     });
 
+    //update bookings
+
+    app.put('/bookings/:id', async(req, res) => {
+      const updatedBookings = await req.body;
+      
+    })
+
     //delete items
 
     app.delete('/bookings/:id', async (req, res) => {
